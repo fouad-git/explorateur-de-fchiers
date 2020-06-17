@@ -2,7 +2,7 @@
 
 ## Comment afficher le contenu d'un répertoire ?
 ### Comment récuperer l'url du current work directory ?
-Je commence par ouvrir une balise dans index.php
+Je commence par ouvrir une balise dans ```index.php```.
 J'ai d'abord besoin de récupérer l'url du dossier de travail courant (current work directory). J'utilise pour cela la fonction ```getcwd()``` et je fais un ```echo``` pour afficher le résultat : 
 ```
 <?php
@@ -67,5 +67,31 @@ Ensuite on fait apparaître tous les éléments dans une boucle ```foreach()``` 
     }
 ```
 ### Comment naviguer dans l'arborescence via le fil d'ariane ?
+On va faire en sorte que chaque élément dans le fil d'ariane soit un bouton cliquable de **type submit** contenu dans un formulaire. Lorsqu'on clique dessus on envoit une donné via la variable ```$_POST```, qu'on va récupérer dans la variale ```$url``` qu'on passera ensuite en paramétre à notre fonction ```chdir()```.
+On commence par déclarer une variable ```$path```, qui va nous servir à enregistrer le chemin des dossiers qu'on parcourt dans le fil d'ariane(ce chemin se contruit au fur et à mesure qu'on navigue dans les dossiers). On place cette variable avant la boucle ```foreach()``` qui sert à parcourir la variable```$breadcrumbs```. Autour de la boucle ```foreach()```, on va générer une balise ouvrante et fermante de formulaire. Ce ```<form>``` aura la méthode ```post```.
+ Ensuite dans le ```foreach()```, on va concaténer à cette variable ```$path```, les éléments de la variable ```$breadcrumbs```, séparés par des ``` DIRECTORY_SEPARATOR ``` : 
+```
+$path = "";
+$breadcrumbs = explode(DIRECTORY_SEPARATOR,$url);
+  echo "<form method='post'>";  
+foreach($breadcrumbs as $item){
+        $path .= $item.DIRECTORY_SEPARATOR;
+        echo "<button type='submit' value='".substr($path,0,-1)."' name='cwd'>";
+        echo $item; 
+        echo "</button>";
 
-
+    }
+echo "</form>";
+```
+Concernant la fonction ```substr()```,elle permet de retirer le dernier ``` DIRECTORY_SEPARATOR ``` dans la variable```$path```.
+Grace à ce formulaire on va transmettre le nom du dossier dans lequel on veut se positionner : ```$_POST ``` récupére la valeur de la variable ```$path``` du ```<button>``` qui a le name ```cwd```. Lorsque qu'on clique sur un bouton le ```submit``` raffraîchit la page, il nous reste à vérifier qu'il y a quelque chose dans la variable superglobale ```$_POST```, s'il n'y a rien on affecte à ```$url``` le paramétre de ```chdir()``` qu'on utilisait jusqu'à présent. S'il y a quelque chose dans ```$_POST```, on l'affecte à ```$url```. Il nous reste à passer ```$url``` dans le paramétre de la fonction ```chdir()``` : 
+```
+if(!isset($_POST['cwd'])){
+   $url = getcwd() . DIRECTORY_SEPARATOR . $home;  
+}
+else{
+    $url = $_POST['cwd'];
+}
+chdir($url );
+``` 
+On place tous ça aprés le ```mkdir()``` et avant le ```scandir()```.  
