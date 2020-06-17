@@ -47,12 +47,25 @@ On commence par déclarer une variable que l'on nomme $contents et qui va conten
 
 Dans le foreach, on créé une condition qui vérifie que les valeurs de $item sont différentes de "." et ".." qui correspondent au dossier "racine" et au dossier "parent". Ces deux objets familier aux utilisateurs de système d'exploitation de type UNIX ne nous sont pas utiles et gênent la lisibilité du résultat du foreach. La condition sera toujours vérifiée puisque ces deux objets se retrouveront dans tous les répertoires lorsque l'on naviguera par la suite dans l'arborescence d'où la nécessité de les faire disparaître. De plus, ".." permet de remonter en amont du répertoire "home". Dans la condition, on fait apparaître chaque occurence de $item et on rempli le tableau contenu dans $content avec les $item en remplaçant chaque index du tableau par le nom du fichier correspondant :
 ```
-foreach ($all_contents as $item) {
+foreach ($content as $item) {
   if ($item !== "." && $item !== "..") {
-    echo $item ."<br>"; // ou : echo "$item<br>";
+    echo "<br>" . $item ;
     $contents[$item] = $item;
   }
 }
 ```
+On remplace le ```foreach ($content as $item)``` par cette nouvelle version de la boucle.
+## Comment afficher le fil d'ariane (breadcrumbs) ?
+Pour faire apparaître l'arborescence sous forme de fil d'ariane, on va scinder en éléments d'un tableau la chaîne de caractéres contenu dans la variable ``` $url```, grace à la fonction ```explode()```. On passe en paramétre de cette fonction ``` DIRECTORY_SEPARATOR ```qui va constituer l'élément qui permet à la fonction de savoir quand elle doit scinder la chaîne de caractére. On place le retour de la fonction dans une variable qu'on va appeler ```$breadcrumbs``` : 
+```
+$breadcrumbs = explode(DIRECTORY_SEPARATOR,$url);
+```
+Ensuite on fait apparaître tous les éléments dans une boucle ```foreach()``` :
+```
+    foreach($breadcrumbs as $item){
+        echo "<button>" . $item . "</button>";
+    }
+```
+### Comment naviguer dans l'arborescence via le fil d'ariane ?
 
 
