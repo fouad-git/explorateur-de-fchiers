@@ -24,5 +24,35 @@ foreach($content as $item){
     echo "<br>" . $item;
 }
 ```
+## Comment créer le dossier racine de notre programme ?
+Le script ne doit surtout pas ouvrir le répertoire qui le contient (pour d'évidentes raisons de sécurité). Il ouvrira un sous-dossier q'on appelera ```home``` : le programme ne pourra remonter dans les parents de ce dossier. On commence donc par vérifier si le dossier ```home``` existe dans le répertoire de travail courant. S'il n'existe pas, le programme le crée : 
+ ```
+ $home = "home";
+if(!is_dir($home)){
+    mkdir("home");
+} 
+```
+On place ce code avant le  ```scandir() ```, sinon le programme affichera le contenu du répertoire avant la création du dossier  ```home ```. Dans la condition ```if()```, on passe en paramétre la fonction```is_dir()```, précédée de l'opérateur de négation```!```, et dans la fonction ```is_dir```, on passe en paramétre la variable```$home```. ```is_dir```, permet de vérifier que ce qui lui est passé en paramétre est un dossier, donc précédé de l'opérateur de négation il vérifie s'il n'y a pas de dossier qui s'appelle ```home```, s'il n'y en a pas, il le crée avec la fonction ```mkdir``` qui signifie **make directory**. 
+### Comment ouvrir par défaut le répertoire home ?
+Nous allons demander au programme d'ouvrir par défaut le dossier ```home```, pour cela on va utiliser la fonction ```chdir()```, qui change le dossier courant.
+ ```
+ chdir(getcwd() . DIRECTORY_SEPARATOR . $home);
+ ```
+On utilise la constante prédifinie  ``` DIRECTORY_SEPARATOR ```, pour génerer des slashs ou des anti-slashs en fonction de l'os où s'éxecute le script. On utilise l'opérateur logique  ```. ``` pour concaténer la fonction  ```getcwd() ```, le  ``` DIRECTORY_SEPARATOR ``` et la variable dans le paramétre de la fonction  ```chdir() ```.
+## Comment faire en sorte que .. et . n’apparaissent pas  ?
+
+On commence par déclarer une variable que l'on nomme $contents et qui va contenir un tableau vide :
+    
+```$contents = [];```
+
+Dans le foreach, on créé une condition qui vérifie que les valeurs de $item sont différentes de "." et ".." qui correspondent au dossier "racine" et au dossier "parent". Ces deux objets familier aux utilisateurs de système d'exploitation de type UNIX ne nous sont pas utiles et gênent la lisibilité du résultat du foreach. La condition sera toujours vérifiée puisque ces deux objets se retrouveront dans tous les répertoires lorsque l'on naviguera par la suite dans l'arborescence d'où la nécessité de les faire disparaître. De plus, ".." permet de remonter en amont du répertoire "home". Dans la condition, on fait apparaître chaque occurence de $item et on rempli le tableau contenu dans $content avec les $item en remplaçant chaque index du tableau par le nom du fichier correspondant :
+```
+foreach ($all_contents as $item) {
+  if ($item !== "." && $item !== "..") {
+    echo $item ."<br>"; // ou : echo "$item<br>";
+    $contents[$item] = $item;
+  }
+}
+```
 
 
