@@ -1,7 +1,7 @@
 <?php
-$home = "home";
+$home = "accueil";
 if(!is_dir($home)){
-    mkdir("home");
+    mkdir("accueil");
 }
 
 if(!isset($_POST['cwd'])){
@@ -15,15 +15,18 @@ $content = scandir($url);
 //print_r($content);
 $path = "";
 $breadcrumbs = explode(DIRECTORY_SEPARATOR,$url);
-  echo "<form method='post' id='ch_cwd'>";  
+  echo "<form method='post' id='ch_cwd'>"; 
+
 foreach($breadcrumbs as $item){
-        $path .= $item.DIRECTORY_SEPARATOR;
-        echo "<button type='submit' value='".substr($path,0,-1)."' name='cwd'>";
-        echo $item; 
-        echo "</button>";
+          $path .= $item.DIRECTORY_SEPARATOR;
+          if(strstr($path, $home)){
+            echo "<button type='submit' value='".substr
+            ($path,0,-1)."' name='cwd'>";//substr retourne une partie d'une chaîne,ici le 1er et le dernier de $path.
+            echo $item; 
+            echo "</button>";
+          }   
     }
     echo "</form>";
-$contents = [];
 foreach ($content as $item) {
     if ($item !== "." && $item !== "..") {
             echo "<br><button type='submit' form='ch_cwd' value='".$url.DIRECTORY_SEPARATOR.$item."' name='cwd'>";

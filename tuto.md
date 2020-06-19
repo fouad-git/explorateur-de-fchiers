@@ -24,24 +24,24 @@ foreach($content as $item){
     echo "<br>" . $item;
 }
 ```
-## Comment créer le dossier racine de notre programme ?
-Le script ne doit surtout pas ouvrir le répertoire qui le contient (pour d'évidentes raisons de sécurité). Il ouvrira un sous-dossier q'on appelera ```home``` : le programme ne pourra remonter dans les parents de ce dossier. On commence donc par vérifier si le dossier ```home``` existe dans le répertoire de travail courant. S'il n'existe pas, le programme le crée : 
+## Comment créer le dossier courant qui sera le point de départ de notre programme ?
+Le script ne doit surtout pas ouvrir le répertoire qui le contient (pour d'évidentes raisons de sécurité). Il ouvrira un sous-dossier q'on appelera ```accueil``` : le programme ne pourra remonter dans les parents de ce dossier. On commence donc par vérifier si le dossier ```accueil``` existe dans le répertoire de travail courant. S'il n'existe pas, le programme le crée : 
  ```
- $home = "home";
+ $home = "accueil";
 if(!is_dir($home)){
-    mkdir("home");
+    mkdir("accueil");
 } 
 ```
-On place ce code avant le  ```scandir() ```, sinon le programme affichera le contenu du répertoire avant la création du dossier  ```home ```. Dans la condition ```if()```, on passe en paramétre la fonction```is_dir()```, précédée de l'opérateur de négation```!```, et dans la fonction ```is_dir```, on passe en paramétre la variable```$home```. ```is_dir```, permet de vérifier que ce qui lui est passé en paramétre est un dossier, donc précédé de l'opérateur de négation il vérifie s'il n'y a pas de dossier qui s'appelle ```home```, s'il n'y en a pas, il le crée avec la fonction ```mkdir``` qui signifie **make directory**. 
+On place ce code avant le  ```scandir() ```, sinon le programme affichera le contenu du répertoire avant la création du dossier  ```accueil ```. Dans la condition ```if()```, on passe en paramétre la fonction```is_dir()```, précédée de l'opérateur de négation```!```, et dans la fonction ```is_dir```, on passe en paramétre la variable```$home```. ```is_dir```, permet de vérifier que ce qui lui est passé en paramétre est un dossier, donc précédé de l'opérateur de négation il vérifie s'il n'y a pas de dossier qui s'appelle ```accueil```, s'il n'y en a pas, il le crée avec la fonction ```mkdir``` qui signifie **make directory**. 
 ### Comment ouvrir par défaut le répertoire home ?
-Nous allons demander au programme d'ouvrir par défaut le dossier ```home```, pour cela on va utiliser la fonction ```chdir()```, qui change le dossier courant.
+Nous allons demander au programme d'ouvrir par défaut le dossier ```accueil```, pour cela on va utiliser la fonction ```chdir()```, qui change le dossier courant.
  ```
  chdir(getcwd() . DIRECTORY_SEPARATOR . $home);
  ```
-On utilise la constante prédifinie  ``` DIRECTORY_SEPARATOR ```, pour génerer des slashs ou des anti-slashs en fonction de l'os où s'éxecute le script. On utilise l'opérateur logique  ```. ``` pour concaténer la fonction  ```getcwd() ```, le  ``` DIRECTORY_SEPARATOR ``` et la variable dans le paramétre de la fonction  ```chdir() ```.
+On utilise la constante prédifinie  ``` DIRECTORY_SEPARATOR ```, pour génerer des slashs ou des anti-slashs en fonction de l'OS où s'éxecute le script. On utilise l'opérateur logique  ```. ``` pour concaténer la fonction  ```getcwd() ```, le  ``` DIRECTORY_SEPARATOR ``` et la variable dans le paramétre de la fonction  ```chdir() ```.
 ## Comment faire en sorte que .. et . n’apparaissent pas  ?
 
-On commence par déclarer une variable que l'on nomme $contents et qui va contenir un tableau vide :
+On commence par déclarer une variable que l'on nomme ```$contents``` et qui va contenir un tableau vide :
     
 ```$contents = [];```
 
@@ -94,4 +94,19 @@ else{
 }
 chdir($url );
 ``` 
-On place tous ça aprés le ```mkdir()``` et avant le ```scandir()```.  
+On place tous ça aprés le ```mkdir()``` et avant le ```scandir()```.
+
+
+### Comment bloquer la navigation au dossier accueil ?
+Dans la boucle ```foreach()``` qui permet d'afficher le fil d'ariane, aprés l'affectation du chemin dans la variable ```$path```, on crée une condition qui vérifie le retour de la fonction ```strstr()```. Cette fonction permet de retourner la premiére occurence d'une chaîne de caractére. On lui pass en paramétre la chaîne de caractére contenu dans ```$path``` et en deuxiéme paramétre la chaîne de caractére contenu dans ```$home``` afin que le retour correspond à ```$home``` :
+```
+foreach($breadcrumbs as $item){
+          $path .= $item.DIRECTORY_SEPARATOR;
+          if(strstr($path, $home)){
+            echo "<button type='submit' value='".substr
+            ($path,0,-1)."' name='cwd'>";//substr retourne une partie d'une chaîne,ici le 1er et le dernier de $path.
+            echo $item; 
+            echo "</button>";
+          }   
+    }
+```
