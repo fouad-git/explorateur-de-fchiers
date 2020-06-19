@@ -111,7 +111,7 @@ foreach($breadcrumbs as $item){
     }
 ```
 ### Comment naviguer dans les dossiers ?
-On va adapter le code pour naviguer dans le fil d'ariane à la boucle ```foreach()``` qui explore le tableau contenu dans ```$content```. On commence par supprimer la variable ```$content``` et l'instruction ```$contents[$item] = $item;```. Maintenant on rajoute dans la balise HTML ```<button>``` un lien vers le formulaire qui a l'id ```ch_cwd``` et on lui passe en value le chemin de chaque item de la boucle :
+On va adapter le code pour naviguer dans le fil d'ariane à la boucle ```foreach()``` qui explore le tableau contenu dans ```$content```.  Maintenant on rajoute dans la balise HTML ```<button>``` un lien vers le formulaire qui a l'id ```ch_cwd``` et on lui passe en value le chemin de chaque item de la boucle :
 ```
 foreach ($content as $item) {
     if ($item !== "." && $item !== "..") {
