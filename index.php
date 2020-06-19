@@ -53,7 +53,9 @@ foreach ($content as $item) {
    
 
   echo "<br><button type='submit' form='ch_cwd' value='".$url.DIRECTORY_SEPARATOR.$item."' name='cwd'>";
-  echo $item . " " . $contents_size[$item]. " " . $contents_type[$item] . " " . $contents_size[$item] ;
+  echo $item . " " . $contents_size[$item]. " " . $contents_type[$item] . " " . $contents_date[$item] ;
   echo "</button>";
 }}
+
+
 ?>
